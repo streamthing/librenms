@@ -150,7 +150,7 @@ foreach ($protocolsData as $protocol) {
 
     $bgpPeer->device_id = $device['device_id'];
     $bgpPeer->astext = get_astext($protocol['neighbor_as']);
-    $bgpPeer->bgpPeerIdentifier = $protocol['neighbor_id'] ?: '0.0.0.0';
+    $bgpPeer->bgpPeerIdentifier = $protocol['neighbor_address'] ?: '0.0.0.0';
     $bgpPeer->bgpPeerRemoteAs = $protocol['neighbor_as'];
     $bgpPeer->bgpPeerState = strtolower($protocol['bgp_state']);
     $bgpPeer->bgpPeerAdminStatus = str_replace('up', 'start', strtolower($protocol['protocol_state']));
