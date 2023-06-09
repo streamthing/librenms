@@ -399,6 +399,14 @@ $graphs['chronyd'] = [
     'frequency',
     'root',
 ];
+$graphs['cape'] = [
+    'status',
+    'pending',
+    'run_stats',
+    'lines',
+    'malscore_stats',
+    'pkg_tasks_all',
+];
 $graphs['sagan'] = [
     'after',
     'bytes_ignored',
@@ -417,11 +425,36 @@ $graphs['sagan'] = [
     'uptime',
     'alert',
 ];
+$graphs['hv-monitor'] = [
+    'status',
+    'memory',
+    'pmem',
+    'time',
+    'pcpu',
+    'flt',
+    'csw',
+    'cow',
+    'etimes',
+    'snaps',
+    'snaps_size',
+];
 $graphs['pwrstatd'] = [
     'wattage',
     'voltage',
     'percentage',
     'minutes',
+];
+$graphs['systemd'] = [
+    'sub',
+    'active',
+    'load',
+];
+$graphs['wireguard'] = [
+    'traffic',
+    'time',
+];
+$graphs['linux_config_files'] = [
+    'number_of_confs',
 ];
 
 echo '<div class="panel panel-default">';

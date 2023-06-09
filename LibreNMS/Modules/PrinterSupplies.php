@@ -21,6 +21,7 @@
 namespace LibreNMS\Modules;
 
 use App\Models\Device;
+use App\Models\Eventlog;
 use App\Models\PrinterSupply;
 use App\Observers\ModuleModelObserver;
 use Illuminate\Support\Collection;
@@ -31,7 +32,6 @@ use LibreNMS\Interfaces\Module;
 use LibreNMS\OS;
 use LibreNMS\RRD\RrdDefinition;
 use LibreNMS\Util\Number;
-use Log;
 
 class PrinterSupplies implements Module
 {
@@ -94,7 +94,7 @@ class PrinterSupplies implements Module
 
             // Log empty supplies (but only once)
             if ($tonerperc == 0 && $toner['supply_current'] > 0) {
-                Log::event(
+                Eventlog::log(
                     'Toner ' . $toner['supply_descr'] . ' is empty',
                     $os->getDevice(),
                     'toner',
@@ -105,13 +105,13 @@ class PrinterSupplies implements Module
 
             // Log toner swap
             if ($tonerperc > $toner['supply_current']) {
-                Log::event(
+                Eventlog::log(
                     'Toner ' . $toner['supply_descr'] . ' was replaced (new level: ' . $tonerperc . '%)',
                     $os->getDevice(),
                     'toner',
                     Alert::NOTICE,
                     $toner['supply_id']
-                 );
+                );
             }
 
             $toner->supply_current = $tonerperc;
@@ -142,7 +142,7 @@ class PrinterSupplies implements Module
 
     private function discoveryLevels($device): Collection
     {
-        $levels = collect();
+        $levels = new Collection();
 
         $oids = snmpwalk_cache_oid($device, 'prtMarkerSuppliesLevel', [], 'Printer-MIB');
         if (! empty($oids)) {
@@ -212,7 +212,7 @@ class PrinterSupplies implements Module
     private function discoveryPapers($device): Collection
     {
         echo 'Tray Paper Level: ';
-        $papers = collect();
+        $papers = new Collection();
 
         $tray_oids = snmpwalk_cache_oid($device, 'prtInputName', [], 'Printer-MIB');
         if (! empty($tray_oids)) {
@@ -234,7 +234,7 @@ class PrinterSupplies implements Module
                 // at least one piece of paper in tray
                 $current = 50;
             } else {
-                $current = $current / $capacity * 100;
+                $current = Number::calculatePercent($current, $capacity);
             }
 
             $papers->push(new PrinterSupply([
@@ -281,7 +281,7 @@ class PrinterSupplies implements Module
                 return 0;
             }
         } elseif ($device['os'] == 'brother') {
-            if (! Str::contains($device['hardware'], 'MFC-L8850')) {
+            if (! Str::contains($device['hardware'] ?? '', 'MFC-L8850')) {
                 switch ($raw_value) {
                     case '0':
                         return 100;

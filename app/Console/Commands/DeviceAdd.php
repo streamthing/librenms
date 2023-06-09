@@ -65,11 +65,11 @@ class DeviceAdd extends LnmsCommand
         $this->addOption('port', 'r', InputOption::VALUE_REQUIRED);
         $this->addOption('transport', 't', InputOption::VALUE_REQUIRED);
         $this->addOption('display-name', 'd', InputOption::VALUE_REQUIRED);
-        $this->addOption('security-name', 'u', InputOption::VALUE_REQUIRED, null, 'root');
+        $this->addOption('security-name', 'u', InputOption::VALUE_REQUIRED, '', 'root');
         $this->addOption('auth-password', 'A', InputOption::VALUE_REQUIRED);
-        $this->addOption('auth-protocol', 'a', InputOption::VALUE_REQUIRED, null, 'MD5');
+        $this->addOption('auth-protocol', 'a', InputOption::VALUE_REQUIRED, '', 'MD5');
         $this->addOption('privacy-password', 'X', InputOption::VALUE_REQUIRED);
-        $this->addOption('privacy-protocol', 'x', InputOption::VALUE_REQUIRED, null, 'AES');
+        $this->addOption('privacy-protocol', 'x', InputOption::VALUE_REQUIRED, '', 'AES');
         $this->addOption('force', 'f', InputOption::VALUE_NONE);
         $this->addOption('ping-fallback', 'b', InputOption::VALUE_NONE);
         $this->addOption('poller-group', 'g', InputOption::VALUE_REQUIRED);
@@ -114,7 +114,7 @@ class DeviceAdd extends LnmsCommand
         ]);
 
         if ($this->option('ping-only')) {
-            $device->snmp_disable = 1;
+            $device->snmp_disable = true;
             $device->os = $this->option('os');
             $device->hardware = $this->option('hardware');
             $device->sysName = $this->option('sysName');

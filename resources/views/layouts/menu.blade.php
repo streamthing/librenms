@@ -133,7 +133,7 @@
                                                               aria-hidden="true"></i> {{ __('Graylog') }}</a></li>
                         @endconfig
 
-                        <li><a href="{{ url('inventory') }}"><i class="fa fa-cube fa-fw fa-lg"
+                        <li><a href="{{ route('inventory') }}"><i class="fa fa-cube fa-fw fa-lg"
                                                                 aria-hidden="true"></i> {{ __('Inventory') }}</a></li>
                         <li><a href="{{ url('outages') }}"><i class="fa fa-bar-chart fa-fw fa-lg"
                                                                aria-hidden="true"></i> {{ __('Outages') }}</a></li>
@@ -592,7 +592,7 @@
                         </li>
                         <li role="presentation" class="divider"></li>
                         @endif
-                        <li><a href="{{ url('about') }}"><i class="fa fa-info-circle fa-fw fa-lg"
+                        <li><a href="{{ url('about') }}"><i class="fa-solid fa-circle-info fa-fw fa-lg"
                                                             aria-hidden="true"></i> {{ __('About :project_name', ['project_name' => \LibreNMS\Config::get('project_name')]) }}
                             </a></li>
                     </ul>
@@ -760,4 +760,23 @@
             });
         }
     @endif
+
+    @if($global_search_ctrlf_focus)
+        $(document).ready(function(){
+            // Function to focus Global Search on Ctrl-F
+            window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)){
+                    if($('#gsearch').is(":focus")) {
+                        //allow normal Ctrl-F on a 2nd Hit
+                        return true;
+                    } else {
+                        //set Focus on Global Search and ignore Browsers defaults
+                        e.preventDefault();
+                        $('#gsearch').focus();
+                    }
+                }
+            })
+        })
+    @endif
+    
 </script>
